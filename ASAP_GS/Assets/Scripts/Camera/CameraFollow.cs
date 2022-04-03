@@ -6,6 +6,7 @@ public class CameraFollow : MonoBehaviour
     [SerializeField] private string _playerTag = "Player";
     [SerializeField] protected float _speed = 5f;
     [SerializeField] private float _zAxisOffset = -10f;
+    //private bool _targetIsMooving = false;
 
     protected void Awake()
     {
@@ -14,13 +15,22 @@ public class CameraFollow : MonoBehaviour
         _followTarget = GameObject.FindGameObjectWithTag(_playerTag).transform;
 
         if (_followTarget)
+        {
             transform.position = GetTargetpPosition(_followTarget, _zAxisOffset);
+            //_targetIsMooving = _followTarget.GetComponent<Move>().IsMooving();
+        }
+
     }
 
     protected void Update()
     {
         if (!_followTarget)
             return;
+
+        //if (_followTarget.GetComponent<Move>().IsMooving())
+        //    transform.position = GetTargetpPosition(_followTarget, _zAxisOffset);
+        //else
+        //    transform.position = GetLerpPosition(_followTarget, _zAxisOffset);
 
         transform.position = GetLerpPosition(_followTarget, _zAxisOffset);
     }
@@ -41,6 +51,5 @@ public class CameraFollow : MonoBehaviour
             y = followTarget.position.y,
             z = followTarget.position.z + zAxisOffset
         };
-
     }
 }
