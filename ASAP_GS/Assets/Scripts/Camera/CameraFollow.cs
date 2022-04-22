@@ -4,9 +4,8 @@ public class CameraFollow : MonoBehaviour
 {
     [SerializeField] private Transform _followTarget;
     [SerializeField] private string _playerTag = "Player";
-    [SerializeField] protected float _speed = 5f;
+    [SerializeField] protected float _speed = 20f;
     [SerializeField] private float _zAxisOffset = -10f;
-    //private bool _targetIsMooving = false;
 
     protected void Awake()
     {
@@ -17,7 +16,6 @@ public class CameraFollow : MonoBehaviour
         if (_followTarget)
         {
             transform.position = GetTargetpPosition(_followTarget, _zAxisOffset);
-            //_targetIsMooving = _followTarget.GetComponent<Move>().IsMooving();
         }
 
     }
@@ -27,18 +25,15 @@ public class CameraFollow : MonoBehaviour
         if (!_followTarget)
             return;
 
-        //if (_followTarget.GetComponent<Move>().IsMooving())
-        //    transform.position = GetTargetpPosition(_followTarget, _zAxisOffset);
-        //else
-        //    transform.position = GetLerpPosition(_followTarget, _zAxisOffset);
-
         transform.position = GetLerpPosition(_followTarget, _zAxisOffset);
     }
 
     protected virtual Vector3 GetLerpPosition (Transform followTarget, float zAxisOffset)
     {
         Vector3 target = GetTargetpPosition(followTarget, zAxisOffset);
-        Vector3 lerpPosition = Vector3.Lerp(transform.position, target, _speed * Time.deltaTime);
+        Vector3 lerpPosition = Vector3
+            //.MoveTowards(transform.position, target, _speed * Time.deltaTime);
+            .Lerp(transform.position, target, _speed * Time.deltaTime);
 
         return lerpPosition;
     }
