@@ -3,11 +3,15 @@ using UnityEngine;
 public class SimpleEnemy : MonoBehaviour, IEnemyFollow
 {
     [SerializeField] protected Transform _target;
-    [SerializeField] private float _speed = 10f;
-    [SerializeField] private int _damage = 10;
-    private Rigidbody2D _rb;
-    private Damager _damager;
-    private HealthPoints _hp;
+    [SerializeField] protected float _speed = 10f;
+    [SerializeField] protected int _damage = 10;
+    
+    [SerializeField] protected float _attackCooldown = 2f;
+    protected float _attackCooldownTimer = 0;
+    
+    protected Rigidbody2D _rb;
+    protected Damager _damager;
+    protected HealthPoints _hp;
 
     public void Start()
     {
@@ -17,9 +21,10 @@ public class SimpleEnemy : MonoBehaviour, IEnemyFollow
         _hp = new HealthPoints(5, new Death());
     }
 
-    public void Update()
+    public virtual void Update()
     {
         EnemyFollow(_target);
+        UpdateAttackCooldown();
     }
 
     //public EnemyMove(Transform target, float speed)
@@ -66,6 +71,16 @@ public class SimpleEnemy : MonoBehaviour, IEnemyFollow
 
     protected virtual void Attack ()
     {
+        if (_attackCooldownTimer > 0)
+            return;
+
+        _attackCooldownTimer = _attackCooldown;
         _damager.DealDamage();
+    }
+
+    protected virtual void UpdateAttackCooldown()
+    {
+        if (_attackCooldownTimer > 0)
+            _attackCooldownTimer -= Time.deltaTime;
     }
 }
