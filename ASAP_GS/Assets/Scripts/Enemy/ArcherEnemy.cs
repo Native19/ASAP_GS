@@ -11,8 +11,7 @@ public class ArcherEnemy : SimpleEnemy
     {
         EnemyFollow(_target);
         UpdateAttackCooldown();
-        Attack();
-        
+        Attack();      
     }
 
     public override void EnemyFollow(Transform target)
