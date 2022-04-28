@@ -22,9 +22,11 @@ public class PlayerController : MonoBehaviour
 
     private List<Ability> _abilites = new List<Ability>();
     [SerializeField] private Transform _attackPoint;
+    [SerializeField] private Transform _particalAttack;
 
     private Rigidbody2D _rb;
     private Animator _anim;
+
 
     void Start()
     {
@@ -40,18 +42,17 @@ public class PlayerController : MonoBehaviour
 
         _rb.sleepMode = 0;
 
-        Ability ability = new Ability(_attackPoint.position, 2f, 100);
-        Debug.Log(_attackPoint.position);
-        Debug.Log(ability);
+        Ability ability = new Ability(_attackPoint.position, 2f, 100, _anim);
+        ParticalAbility ability2 = new ParticalAbility(_attackPoint.position, 2f, 100, _particalAttack, _anim);
         _abilites.Add(ability);
-        //_abilites.Add(new Ability(_attackPoint.position, 2f, 100));
+        _abilites.Add(ability2);
     }
 
     void Update()
     {
         _hp.UpdateImmunityTimer();
         _mover.UpdateDash();
-        _abilites.ForEach(ability => ability.UpdateAbility(_attackPoint.position));
+        _abilites.ForEach(ability => ability.UpdateAbility(_attackPoint.position, _isMovingRight));
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
@@ -80,6 +81,11 @@ public class PlayerController : MonoBehaviour
             //obj.transform.GetComponent<SpriteRenderer>().color = Color.red;
         }    
 
+        if (Input.GetKeyDown(KeyCode.Mouse1))
+        {
+            _abilites[1].Use();
+        }
+
     }
 
     public void GetHeal(int hp)
@@ -100,5 +106,10 @@ public class PlayerController : MonoBehaviour
             transform.localScale *= new Vector2(-1, 1);
             _isMovingRight = !_isMovingRight;
         }
+    }
+
+    public void OverAttack()
+    {
+        _anim.SetBool("isAttack", false);
     }
 }
