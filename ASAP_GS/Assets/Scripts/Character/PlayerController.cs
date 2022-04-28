@@ -18,13 +18,18 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float _jumpCoolDown = 0.5f;
 
     private HealthPoints _hp;
-    [SerializeField] private int _maxHP = 100;
+    [SerializeField] private int _maxHP = 3;
 
     private List<Ability> _abilites = new List<Ability>();
     [SerializeField] private Transform _attackPoint;
 
     private Rigidbody2D _rb;
     private Animator _anim;
+
+    private void Awake()
+    {
+        _hp = new HealthPoints(_maxHP, new Death());
+    }
 
     void Start()
     {
@@ -34,7 +39,7 @@ public class PlayerController : MonoBehaviour
         else
             _rb = transform.gameObject.AddComponent<Rigidbody2D>();
 
-        _hp = new HealthPoints(_maxHP, new Death()); // ToDo: Сделать смерть
+        //_hp = new HealthPoints(_maxHP, new Death()); // ToDo: Сделать смерть
         _mover = new Move(_speed, _dashForce, _dashCooldown, _rb, _anim);
         _jumper = new Jump(_jumpForce, _groundCollider, _LayerMask, _rb);
 
@@ -100,5 +105,15 @@ public class PlayerController : MonoBehaviour
             transform.localScale *= new Vector2(-1, 1);
             _isMovingRight = !_isMovingRight;
         }
+    }
+
+    public int GetCurrentHealth()
+    {
+        return _hp.GetHealth();
+    }
+
+    public int GetMaxHealth()
+    {
+        return _maxHP;
     }
 }

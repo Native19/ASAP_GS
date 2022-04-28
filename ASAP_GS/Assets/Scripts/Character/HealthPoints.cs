@@ -2,6 +2,9 @@ using UnityEngine;
 
 public class HealthPoints
 {
+    public delegate void OnHPChange();
+    public static OnHPChange onHPChange;
+
     private int _maxHealth, _nowhHealth;
     private bool _isImmunity = false;
     private float _immunityTimer;
@@ -47,6 +50,8 @@ public class HealthPoints
     {
         _nowhHealth += hp;
 
+        onHPChange?.Invoke();
+
         if (_nowhHealth > _maxHealth)
             _nowhHealth = _maxHealth;
     }
@@ -57,6 +62,8 @@ public class HealthPoints
             return;
 
         _nowhHealth -= damage;
+
+        onHPChange?.Invoke();
         
         if (_nowhHealth < 0)
         {
