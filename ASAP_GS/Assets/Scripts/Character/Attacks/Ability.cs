@@ -3,17 +3,20 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 
-public class Ability
+public class Ability : MonoBehaviour
 {
     protected Vector2 _attackPoint;
     protected float _overlapRadius = 2;
     protected int _damage = 100;
+    protected bool _isMoovingRight = true;
+    protected Animator _animator;
 
-    public Ability (Vector2 attackPoint, float overlapRadius, int damage)
+    public Ability (Vector2 attackPoint, float overlapRadius, int damage, Animator animator)
     {
         _attackPoint = attackPoint;
         _overlapRadius = overlapRadius;
-        _damage = damage;   
+        _damage = damage;
+        _animator = animator;
     }
     public virtual void Use ()
     {
@@ -22,6 +25,7 @@ public class Ability
 
     protected virtual void Action ()
     {
+        _animator.SetBool("isAttack", true);
         List<GameObject> collidObjects = Physics2D.OverlapCircleAll(_attackPoint, _overlapRadius)
             .ToList()
             .ConvertAll(collider => collider.gameObject);
@@ -41,8 +45,14 @@ public class Ability
         
     }
 
-    public void UpdateAbility(Vector3 attackPoint)
+    public void UpdateAbility(Vector3 attackPoint, bool isMoovingRight)
     {
         _attackPoint = attackPoint;
+        _isMoovingRight = isMoovingRight;
+    }
+
+    public void OverAttack()
+    {
+        _animator.SetBool("isAttack", false);
     }
 }

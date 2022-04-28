@@ -44,11 +44,10 @@ public class SimpleEnemy : MonoBehaviour, IEnemyFollow
         //transform.position = lerpPosition;
     }
 
-    public void OnCollisionEnter2D(Collision2D collision)
+    public virtual void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.transform == _target)
-            Attack();
-            
+            Attack();           
     }
 
     public void GetHeal(int hp)
