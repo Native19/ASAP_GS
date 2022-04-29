@@ -46,7 +46,7 @@ public class PlayerController : MonoBehaviour
 
         _rb.sleepMode = 0;
 
-        Ability ability = new Ability(_attackPoint.position, 2f, 100, _anim);
+        Ability ability = new Ability(_attackPoint.position, 1f, 100, _anim);
         ParticalAbility ability2 = new ParticalAbility(_attackPoint.position, 2f, 100, _particalAttack, _anim);
         _abilites.Add(ability);
         _abilites.Add(ability2);
@@ -120,5 +120,10 @@ public class PlayerController : MonoBehaviour
     public int GetMaxHealth()
     {
         return _maxHP;
+    }
+
+    public void OverAttack()
+    {
+        _anim.SetBool("isAttack", false);
     }
 }
