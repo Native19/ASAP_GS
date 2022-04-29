@@ -41,7 +41,7 @@ public class HealthPoints
         return _nowhHealth;
     }
 
-    public bool IsAlive()
+    public bool IsAlife()
     {
         return _nowhHealth > 0;
     }

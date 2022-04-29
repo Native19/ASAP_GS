@@ -5,7 +5,8 @@ public class Move : MonoBehaviour, IMove
     private float _speed = 10f;
     private bool _isMooving = false;
     private Rigidbody2D _rb;
-    private bool _isMovingRight = true;
+    private bool _isLeft = false;
+    private bool _isIdle = true;
     
     private int _dashForce = 20;
     private float _dashCooldown = 2f;
@@ -28,12 +29,21 @@ public class Move : MonoBehaviour, IMove
         _rb = rb;
         _animator = animator;
     }
+    //private void AddVelocity ()
+    //{
+    //    Vector2 normalizeHorizontalVelocity = new Vector2(Input.GetAxis("Horizontal"), 0);
+    //    _rb.velocity = normalizeHorizontalVelocity * _speed;
+
+    //    _isMooving = normalizeHorizontalVelocity.magnitude > 0.1;
+    //    _isLeft = normalizeHorizontalVelocity.x < -0.1;
+    //}
 
     public void Run(Vector2 normalizeVelocity)
     {
         _rb.velocity = new Vector2 (normalizeVelocity.x * _speed, _rb.velocity.y);
 
         _isMooving = normalizeVelocity.magnitude > 0.1;
+        _isLeft = normalizeVelocity.x < -0.1;
     }
 
     public void Dash(Vector2 normalizeVelocity)
@@ -42,10 +52,9 @@ public class Move : MonoBehaviour, IMove
             return;
 
         Vector2 horizontalVelocity = Vector2.zero;
-        horizontalVelocity.x = _isMovingRight ? 1 : -1;
+        horizontalVelocity.x = Mathf.Sign(normalizeVelocity.x);
 
-
-        _rb.AddForce(horizontalVelocity * _dashForce, ForceMode2D.Impulse);
+        _rb.AddForce(horizontalVelocity * _dashForce, ForceMode2D.Impulse); // dash в сторону последнего направления??????????
         _animator.SetBool("isDash", true);
 
         _isDashPossible = false;
@@ -54,13 +63,14 @@ public class Move : MonoBehaviour, IMove
         _dashColldownTimer = _dashCooldown;
     }
 
-    public void UpdateDash(bool isMovingRight)
+    public void UpdateDash()
     {
-        _isMovingRight = isMovingRight;
-
+        //Debug.Log(_dashColldownTimer);
         if (_dashColldownTimer > 0)
         {
             _dashColldownTimer -= Time.deltaTime;
+            //if (_dashColldownTimer <= 0)
+            //    _isDashPossible = false;
         }
         else
         {

@@ -12,19 +12,18 @@ public class Jump : MonoBehaviour, IJump
     private bool _onGround;
     private float _colliderRadius = 0.5f;
     private bool _isJumpCoolDown = false;
-    private Animator _animator;
 
-    public Jump(float jumpForce, Transform groundCollider, LayerMask layerMask, Rigidbody2D rb,Animator animator)
+    public Jump(float jumpForce, Transform groundCollider, LayerMask layerMask, Rigidbody2D rb)
     {
         _jumpForce = jumpForce;
         _groundCollider = groundCollider;
         _layerMask = layerMask;
         _rb = rb;
-        _animator = animator;
     }
 
     private bool OnGround()
     {
+        // Не работает с _colliderRadius
         return Physics2D.OverlapCircle(_groundCollider.position, 0.5f, _layerMask);
     }
 
@@ -39,8 +38,9 @@ public class Jump : MonoBehaviour, IJump
         _onGround = OnGround();
         if (_onGround && !_isJumpCoolDown)
         {
-            _animator.SetBool("isJump", true);
             _rb.AddForce(Vector2.up * _jumpForce, ForceMode2D.Impulse);
+            //_isJumpCoolDown = true;
+            //StartCoroutine(JumpCoolDown());
         }
     }
 }

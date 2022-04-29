@@ -16,10 +16,11 @@ public class ArcherEnemy : SimpleEnemy
 
     public override void EnemyFollow(Transform target)
     {
-        transform.localScale = new Vector3(
-            -Mathf.Sign(target.position.x - transform.position.x) * Mathf.Abs(transform.localScale.x),
-            transform.localScale.y,
-            transform.localScale.z);
+        if (Mathf.Abs(target.position.x - transform.position.x) < 1)
+            return;
+
+        Vector2 targetDirection = new Vector2(Mathf.Sign(target.position.x - transform.position.x), 0);
+        _rb.velocity = targetDirection * _speed;
     }
 
     protected override void Attack()
@@ -34,22 +35,13 @@ public class ArcherEnemy : SimpleEnemy
         List<GameObject> gameObjectsInCollider = collisions.ConvertAll(collision => collision.gameObject);
 
         if (gameObjectsInCollider.Contains(_target.gameObject))
-        {       
-             _animator.SetBool("isAttack", true);
+        {
+            //Mathf.Atan2(_target.position.y - transform.position.y, _target.position.x - transform.position.x) * Mathf.Rad2Deg
+            float angle = Mathf.Atan2(_target.position.y - transform.position.y, _target.position.x - transform.position.x) * Mathf.Rad2Deg;
+            Quaternion quaternion = Quaternion.Euler(0, 0, angle);
+            Transform obj = Instantiate(_projectile, transform.position, quaternion);
+            obj.GetComponent<Projectile>().Initial(/*1f,*/ (_target.position - transform.position).normalized, 1);
+            //_damager.DealDamage();
         }
-    }
-
-    public void AttackIsEnd()
-    {
-        _animator.SetBool("isAttack", false);
-    }
-
-    public void SpawnFrog()
-    {
-        float angle = Mathf.Atan2(_target.position.y - transform.position.y, _target.position.x - transform.position.x) * Mathf.Rad2Deg;
-        Quaternion quaternion = Quaternion.Euler(0, 0, angle);
-        Transform obj = Instantiate(_projectile, transform.position, quaternion);
-        obj.transform.localScale = new Vector3(obj.transform.localScale.x, Mathf.Sign(_target.position.x - transform.position.x) * obj.transform.localScale.y, obj.transform.localScale.z);
-        obj.GetComponent<Projectile>().Initial((_target.position - transform.position).normalized, 1);
     }
 }
