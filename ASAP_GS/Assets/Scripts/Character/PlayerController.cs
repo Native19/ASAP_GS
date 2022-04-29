@@ -23,16 +23,14 @@ public class PlayerController : MonoBehaviour
     private List<Ability> _abilites = new List<Ability>();
     [SerializeField] private Transform _attackPoint;
     [SerializeField] private Transform _particalAttack;
+    [SerializeField] private float _meleeAttackRange = 1;
 
     private Rigidbody2D _rb;
     private Animator _anim;
 
-    private void Awake()
-    {
-        _hp = new HealthPoints(_maxHP, new Death());
-    }
+    [SerializeField] private string _thisScene;
 
-    void Start()
+    private void Awake()
     {
         _anim = transform.GetComponent<Animator>();
         if (transform.GetComponent<Rigidbody2D>())
@@ -42,20 +40,29 @@ public class PlayerController : MonoBehaviour
 
         //_hp = new HealthPoints(_maxHP, new Death()); // ToDo: ������� ������
         _mover = new Move(_speed, _dashForce, _dashCooldown, _rb, _anim);
-        _jumper = new Jump(_jumpForce, _groundCollider, _LayerMask, _rb);
+        _jumper = new Jump(_jumpForce, _groundCollider, _LayerMask, _rb, _anim);
 
         _rb.sleepMode = 0;
 
-        Ability ability = new Ability(_attackPoint.position, 1f, 100, _anim);
-        ParticalAbility ability2 = new ParticalAbility(_attackPoint.position, 2f, 100, _particalAttack, _anim);
+        Ability ability = new Ability(_attackPoint.position, _meleeAttackRange, 100, _anim);
+        ParticalAbility ability2 = new ParticalAbility(_attackPoint.position, _meleeAttackRange, 100, _particalAttack, _anim);
         _abilites.Add(ability);
         _abilites.Add(ability2);
     }
 
+    void Start()
+    {
+    }
+
     void Update()
     {
+        if (!_hp.IsAlive())
+        {
+            SceneChanger.ChangeScene(_thisScene);
+        }
+
         _hp.UpdateImmunityTimer();
-        _mover.UpdateDash();
+        _mover.UpdateDash(_isMovingRight);
         _abilites.ForEach(ability => ability.UpdateAbility(_attackPoint.position, _isMovingRight));
 
         if (Input.GetKeyDown(KeyCode.Space))
@@ -65,6 +72,7 @@ public class PlayerController : MonoBehaviour
 
         Vector2 normalizeHorizontalVelocity = new Vector2(Input.GetAxis("Horizontal"), _rb.velocity.y);
         _anim.SetFloat("XVelocity", Mathf.Abs(normalizeHorizontalVelocity.x));
+        _anim.SetFloat("YVelocity", Mathf.Abs(normalizeHorizontalVelocity.y));
         Reflect(normalizeHorizontalVelocity.x);
 
         if (Input.GetKeyDown(KeyCode.LeftShift))
@@ -76,13 +84,9 @@ public class PlayerController : MonoBehaviour
         if (normalizeHorizontalVelocity.magnitude != 0 && !_mover.IsDashActive())
             _mover.Run(normalizeHorizontalVelocity);
 
-        if (Input.GetAxis("Fire1") != 0)
+        if (Input.GetKeyDown(KeyCode.Mouse0))
         {
             _abilites[0].Use();
-            //GameObject obj = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-            //obj.transform.position = _attackPoint.position;
-            //obj.transform.localScale = new Vector3 (2, 2, 2);
-            //obj.transform.GetComponent<SpriteRenderer>().color = Color.red;
         }    
 
         if (Input.GetKeyDown(KeyCode.Mouse1))
@@ -125,5 +129,10 @@ public class PlayerController : MonoBehaviour
     public void OverAttack()
     {
         _anim.SetBool("isAttack", false);
+    }
+
+    public void OverJump()
+    {
+        _anim.SetBool("isJump", false);
     }
 }

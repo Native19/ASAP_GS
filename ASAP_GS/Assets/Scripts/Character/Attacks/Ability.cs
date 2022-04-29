@@ -25,6 +25,12 @@ public class Ability : MonoBehaviour
 
     protected virtual void Action ()
     {
+        if (_animator.GetBool("isAttack"))
+        {
+            Debug.Log("&&&&&&&&&&&&&&&");
+            return;
+        }
+
         _animator.SetBool("isAttack", true);
         List<GameObject> collidObjects = Physics2D.OverlapCircleAll(_attackPoint, _overlapRadius)
             .ToList()
