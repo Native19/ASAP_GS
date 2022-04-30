@@ -38,7 +38,7 @@ public class PlayerController : MonoBehaviour
         else
             _rb = transform.gameObject.AddComponent<Rigidbody2D>();
 
-        //_hp = new HealthPoints(_maxHP, new Death()); // ToDo: ������� ������
+        _hp = new HealthPoints(_maxHP, new Death()); // ToDo: ������� ������
         _mover = new Move(_speed, _dashForce, _dashCooldown, _rb, _anim);
         _jumper = new Jump(_jumpForce, _groundCollider, _LayerMask, _rb, _anim);
 
@@ -78,7 +78,7 @@ public class PlayerController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.LeftShift))
         {
             _mover.Dash(normalizeHorizontalVelocity);
-            _hp.SetImmunity(5);
+            _hp.SetImmunity(_dashImmunityDuration);
         }
 
         if (normalizeHorizontalVelocity.magnitude != 0 && !_mover.IsDashActive())

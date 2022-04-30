@@ -103,8 +103,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _target: {fileID: 0}
-  _speed: 5
-  _damage: 10
+  _speed: 2
+  _damage: 1
   _attackCooldown: 2
   _attackCooldownTimer: 0
   _animator: {fileID: 8987821743117320193}

@@ -187,17 +187,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f99783339879c7e458ef8fbc1191f7ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _speed: 10
+  _speed: 8
   _dashForce: 15
   _dashImmunityDuration: 0.5
   _dashCooldown: 2
-  _jumpForce: 40
+  _jumpForce: 35
   _groundCollider: {fileID: 2990565928439700350}
   _LayerMask:
     serializedVersion: 2
     m_Bits: 64
   _jumpCoolDown: 0.5
   _maxHP: 100
+  _attackPoint: {fileID: 0}
+  _particalAttack: {fileID: 0}
+  _meleeAttackRange: 1
+  _thisScene: 
 --- !u!95 &6029378203045345353
 Animator:
   serializedVersion: 4

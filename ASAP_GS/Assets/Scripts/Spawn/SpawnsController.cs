@@ -45,7 +45,7 @@ public class SpawnsController : MonoBehaviour
 
     IEnumerator LvlIsOver()
     {
-        yield return new WaitForSeconds(300f);
+        yield return new WaitForSeconds(120f);
         SceneChanger.ChangeScene(_nextScene);
     }
 }

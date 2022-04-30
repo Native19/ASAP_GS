@@ -34,14 +34,18 @@ public class UI : MonoBehaviour
     void UIIntit()
     {
         currentHealth = player.GetCurrentHealth();
+        Vector2 hpOrigin = (Vector2)GameObject.Find("HitPointOrigin").transform.localPosition;
 
         for (int i = 0; i < currentHealth; i++)
         {
             Transform hitPoint = Instantiate(hitPointSprite, transform);
-            hitPoint.localPosition = (Vector2)GameObject.Find("HitPointOrigin").transform.localPosition + new Vector2(70 * i, 0);
+            hitPoint.localPosition = hpOrigin + new Vector2(35 * i, 0);
 
             hitPointsIcons.Add(hitPoint.gameObject);
         }
+
+
+
     }
 
     void UIUpdate()

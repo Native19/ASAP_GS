@@ -103,7 +103,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _target: {fileID: 2990565928630610559, guid: 04f98e47a9f8b4846bbafea0bc475602, type: 3}
   _speed: 2
-  _damage: 10
+  _damage: 1
   _attackCooldown: 2
   _attackCooldownTimer: 0
   _animator: {fileID: 0}
